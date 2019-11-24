@@ -42,7 +42,8 @@ def experiment(plot_path, ds_name, no_aug, affine_std, scale_u_range, scale_x_ra
 
 
     import numpy as np
-    from skimage.util.montage import montage2d
+    # from skimage.util import montage2d
+    from skimage.util import montage as montage2d
     from PIL import Image
     from batchup import data_source
     import data_loaders
