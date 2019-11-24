@@ -1,12 +1,11 @@
 """
 Incorporates mean teacher, from:
-
 Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results
 Antti Tarvainen, Harri Valpola
 https://arxiv.org/abs/1703.01780
-
 """
 import click
+import torch
 
 
 @click.command()
@@ -16,7 +15,7 @@ import click
                                           'mnist_usps', 'usps_mnist',
                                           'syndigits_svhn',
                                           'synsigns_gtsrb',
-                                          ]), default='mnist_svhn',
+                                          ]), default='svhn_mnist',
               help='experiment to run')
 @click.option('--arch', type=click.Choice([
     '',
@@ -67,7 +66,7 @@ import click
               help='tgt aug colour; intensity offset range `low:high` (-0.5:0.5 for mnist-svhn)')
 @click.option('--tgt_gaussian_noise_std', type=float, default=0.1,
               help='tgt aug: standard deviation of Gaussian noise to add to samples')
-@click.option('--num_epochs', type=int, default=200, help='number of epochs')
+@click.option('--num_epochs', type=int, default=10, help='number of epochs')
 @click.option('--batch_size', type=int, default=64, help='mini-batch size')
 @click.option('--epoch_size', type=click.Choice(['large', 'small', 'target']), default='target',
               help='epoch size is either that of the smallest dataset, the largest, or the target')
@@ -532,7 +531,7 @@ def experiment(exp, arch, loss, double_softmax, confidence_thresh, rampup, teach
     if model_file != '':
         cmdline_helpers.ensure_containing_dir_exists(model_file)
         with open(model_file, 'wb') as f:
-            pickle.dump(best_teacher_model_state, f)
+            torch.save(best_teacher_model_state, f)
 
 if __name__ == '__main__':
     experiment()
